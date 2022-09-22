@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios';
 import moment from 'moment';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faWind, faDroplet, faTemperatureHalf } from '@fortawesome/free-solid-svg-icons';
 
 const initValue = {
     input: 'Los Angeles'
@@ -21,6 +23,12 @@ const Weather = () => {
     const [low, setLow] = useState();
     const [weatherData, setWeatherData] = useState([]);
     const [today, setToday] = useState("");
+    const [sunrise, setSunrise] = useState("");
+    const [sunset, setSunset] = useState("");
+    const [wind, setWind] = useState();
+    const [rain, setRain] = useState();
+    const [feelsLike, setFeelsLike] = useState();
+
 
     let API_KEY = process.env.REACT_APP_API_KEY;
 
@@ -47,6 +55,11 @@ const Weather = () => {
         let today = data.forecast.forecastday[0].date;
         let high = data.forecast.forecastday[0].day.maxtemp_f;
         let low = data.forecast.forecastday[0].day.mintemp_f;
+        let sunrise = data.forecast.forecastday[0].astro.sunrise;
+        let sunset = data.forecast.forecastday[0].astro.sunset;
+        let wind = data.current.wind_mph;
+        let rain = data.forecast.forecastday[0].day.totalprecip_in;
+        let feels = data.current.feelslike_f;
         setWeatherData(forecastData)
         setRegion(region);
         setLocation(name);
@@ -56,6 +69,11 @@ const Weather = () => {
         setToday(today);
         setHigh(high);
         setLow(low);
+        setSunrise(sunrise);
+        setSunset(sunset);
+        setWind(wind);
+        setRain(rain);
+        setFeelsLike(feels);
         console.log(data)
     }
 
@@ -95,7 +113,7 @@ const Weather = () => {
             imgUrl = "https://www.dropbox.com/s/ed71x4yz16772ul/blue-sky-SBI-300617901.jpg?raw=1"
         } else if (c == "Overcast") {
             imgUrl = "https://www.dropbox.com/s/gvphoajhwbvqmj9/overcast.jpeg?raw=1"
-        } else if (c == "Partly cloudy"){
+        } else if (c == "Partly cloudy") {
             imgUrl = "https://www.dropbox.com/s/d0snz49s6cxgdv7/Screen%20Shot%202022-09-22%20at%202.51.56%20PM.png?raw=1"
         } else {
             imgUrl = ""
@@ -170,6 +188,7 @@ const Weather = () => {
             </div>
 
 
+
             <div className='card-b' onClick={switchVisible}>
 
                 <div className='card-contents-heading-b'>
@@ -198,6 +217,25 @@ const Weather = () => {
                     })}
                 </div>
             </div>
+            <div className="lower-info-container">
+                <div className='info-cards'>
+                    <FontAwesomeIcon icon={faWind} />
+                    <div><span>Wind</span></div>
+                    <div><span>{wind} mph</span></div>
+                </div>
+                <div className='info-cards'>
+                    <FontAwesomeIcon icon={faDroplet} />
+                    <div><span>Rain</span></div>
+                    <div><span>{rain}" in last 24h</span></div>
+                </div>
+                <div className='info-cards'>
+                <FontAwesomeIcon icon={faTemperatureHalf} />
+                    <div><span>Feels Like</span></div>
+                    <div><span>{feelsLike} °F</span></div>
+                </div>
+               
+            </div>
+
             <img id="myImg" ></img>
 
         </div >
