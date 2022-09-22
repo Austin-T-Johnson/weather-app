@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios';
-
+import moment from 'moment';
 
 const initValue = {
     input: 'Los Angeles'
 }
 
 const state = {
-    forcastCard: ["", "", "", "", "", "", "", "", "", ""],
 
+    addCard: ["", "", "", "", "", "", "", "", "", ""]
 }
 const Weather = () => {
     const [values, setValues] = useState(initValue);
@@ -20,6 +20,7 @@ const Weather = () => {
     const [high, setHigh] = useState();
     const [low, setLow] = useState();
     const [weatherData, setWeatherData] = useState([]);
+    const [today, setToday] = useState("");
 
     let API_KEY = process.env.REACT_APP_API_KEY;
 
@@ -43,26 +44,59 @@ const Weather = () => {
         let forecastData = data.forecast.forecastday;
         let region = data.location.region;
         let icon = data.current.condition.icon;
+        let today = data.forecast.forecastday[0].date;
+        let high = data.forecast.forecastday[0].day.maxtemp_f;
+        let low = data.forecast.forecastday[0].day.mintemp_f;
         setWeatherData(forecastData)
         setRegion(region);
         setLocation(name);
         setTemp(temp);
         setCondition(condition);
         setIcon(icon);
+        setToday(today);
+        setHigh(high);
+        setLow(low);
         console.log(data)
     }
+
+
+
+
+    //   console.log(moment().format('dddd'), moment().add(2, 'days').calendar());
+
+
+    const switchVisible = () => {
+        if (document.querySelector(".card")) {
+            if (document.querySelector(".card").style.display == 'none') {
+                document.querySelector(".card").style.display = 'block';
+                document.querySelector(".card-b").style.display = 'none'
+            } else {
+                document.querySelector(".card").style.display = 'none';
+                document.querySelector(".card-b").style.display = 'block'
+            }
+        }
+    }
+
+
+
+
 
 
     useEffect(() => {
         getCurrentWeather()
         renderImg()
-    }, [])
+
+    }, [condition])
 
     const renderImg = () => {
-
+        let c = condition
         let imgUrl = ""
-        if (condition == "Sunny") {
-            imgUrl = "https://www.dropbox.com/s/sgcg2di6uoxfnjn/sunnysky.png?raw=1"
+        if (c == "Sunny" || c == "Clear") {
+            imgUrl = "https://www.dropbox.com/s/ed71x4yz16772ul/blue-sky-SBI-300617901.jpg?raw=1"
+        } else if (c == "Overcast") {
+            imgUrl = "https://www.dropbox.com/s/gvphoajhwbvqmj9/overcast.jpeg?raw=1"
+        } else if (c == "Partly cloudy"){
+            imgUrl = "https://www.dropbox.com/s/d0snz49s6cxgdv7/Screen%20Shot%202022-09-22%20at%202.51.56%20PM.png?raw=1"
         } else {
             imgUrl = ""
         }
@@ -70,8 +104,8 @@ const Weather = () => {
     }
 
     return (
-        <div className='card-container' id='selected'>
-            <h1 className='heading-text'>Look up weather and shit</h1>
+        <div className='card-container'>
+            <h1 className='heading-text'>Weather</h1>
             <div className='search-container'>
                 <div className="searchbar">
                     <div className="searchbar-wrapper">
@@ -110,14 +144,14 @@ const Weather = () => {
 
                 <div onClick={onSubmit} className='svg-container'>
                     <svg className="button" width="34" height="34" viewBox="0 0 74 74" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="37" cy="37" r="35.5" stroke="black" strokeWidth="3"></circle>
-                        <path d="M25 35.5C24.1716 35.5 23.5 36.1716 23.5 37C23.5 37.8284 24.1716 38.5 25 38.5V35.5ZM49.0607 38.0607C49.6464 37.4749 49.6464 36.5251 49.0607 35.9393L39.5147 26.3934C38.9289 25.8076 37.9792 25.8076 37.3934 26.3934C36.8076 26.9792 36.8076 27.9289 37.3934 28.5147L45.8787 37L37.3934 45.4853C36.8076 46.0711 36.8076 47.0208 37.3934 47.6066C37.9792 48.1924 38.9289 48.1924 39.5147 47.6066L49.0607 38.0607ZM25 38.5L48 38.5V35.5L25 35.5V38.5Z" fill="black"></path>
+                        <circle cx="37" cy="37" r="35.5" stroke="white" strokeWidth="3"></circle>
+                        <path d="M25 35.5C24.1716 35.5 23.5 36.1716 23.5 37C23.5 37.8284 24.1716 38.5 25 38.5V35.5ZM49.0607 38.0607C49.6464 37.4749 49.6464 36.5251 49.0607 35.9393L39.5147 26.3934C38.9289 25.8076 37.9792 25.8076 37.3934 26.3934C36.8076 26.9792 36.8076 27.9289 37.3934 28.5147L45.8787 37L37.3934 45.4853C36.8076 46.0711 36.8076 47.0208 37.3934 47.6066C37.9792 48.1924 38.9289 48.1924 39.5147 47.6066L49.0607 38.0607ZM25 38.5L48 38.5V35.5L25 35.5V38.5Z" fill="white"></path>
                     </svg>
                 </div>
             </div>
 
 
-            {/* <div className='card'>
+            <div className='card' onClick={switchVisible}>
                 <div className='card-contents'>
                     <div className='card-contents-heading'>
                         <h1>{location}</h1>
@@ -133,15 +167,10 @@ const Weather = () => {
                     </div>
                     <img src={icon} alt="" />
                 </div>
-            </div> */}
+            </div>
 
 
-
-
-
-
-
-            <div className='card-b'>
+            <div className='card-b' onClick={switchVisible}>
 
                 <div className='card-contents-heading-b'>
                     <h1>{location}</h1>
@@ -149,9 +178,13 @@ const Weather = () => {
                     <span className='temp-b'>{temp} °F</span>
                     <span className='condition-b'>{condition}</span>
                 </div>
+                <div className='high-low'>
+                    <span>H: {high}</span>
+                    <span>L: {low}</span>
+                </div>
+
                 <div className='tenDay'><span>10 Day Forcast</span> </div>
                 <div className="forcast-container">
-
                     {weatherData.map((day, idx) => {
                         return (
                             <div key={idx} className='day'>
@@ -164,9 +197,9 @@ const Weather = () => {
                         )
                     })}
                 </div>
-
             </div>
-            < img id="myImg" ></img >
+            <img id="myImg" ></img>
+
         </div >
 
     )

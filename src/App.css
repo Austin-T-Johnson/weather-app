@@ -57,6 +57,7 @@ table {
 .button {
     cursor: pointer;
    
+   
 }
   .button:active {
     transform: scale(0.95);
@@ -75,10 +76,13 @@ table {
 
 }
 
+
+
 .heading-text {
-    /* color: white; */
-    font-size: 2.5rem;
+    color: white;
+    font-size: 3rem;
     margin: 3% 0;
+    
 }
 
 .card {
@@ -136,6 +140,7 @@ h1 {
         -15px -15px 30px #ffffff;
         cursor: pointer;
         position: relative;
+        display: none;
 }
 
 
@@ -189,9 +194,20 @@ h1 {
 .search-container {
     margin-bottom: 5%;
     display:flex;
+    /* justify-content: center; */
    gap: 20px;
+   margin-left: 60px;
    align-items: center;
-  
+   /* background-color: red; */
+   /* width: 20%; */
+}
+
+
+.high-low {
+    color: white;
+    display: flex;
+    justify-content: center;
+    margin-top: 2%;
 }
 
 /* From uiverse.io by @TimTrayler */
