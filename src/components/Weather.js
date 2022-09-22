@@ -1,65 +1,77 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios';
-import cities from '../JSON/cities.json';
+
 
 const initValue = {
     input: 'Los Angeles'
 }
+
+const state = {
+    forcastCard: ["", "", "", "", "", "", "", "", "", ""],
+
+}
 const Weather = () => {
     const [values, setValues] = useState(initValue);
     const [location, setLocation] = useState('');
+    const [region, setRegion] = useState('');
     const [temp, setTemp] = useState();
     const [condition, setCondition] = useState('');
     const [icon, setIcon] = useState();
     const [high, setHigh] = useState();
     const [low, setLow] = useState();
+    const [weatherData, setWeatherData] = useState([]);
+
     let API_KEY = process.env.REACT_APP_API_KEY;
 
-    let city = cities.map((c) => {
-        return c.name
-    })
+
 
     const onChange = evt => {
         setValues({ ...values, input: evt.target.value })
-        console.log(evt.target.value)
     }
 
     const onSubmit = () => {
         getCurrentWeather();
     }
 
-  
 
     const getCurrentWeather = async () => {
-        await axios.get(`http://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q=${values.input}&days=1&aqi=no&alerts=no
+        const { data } = await axios.get(`http://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q=${values.input}&days=10&aqi=no&alerts=no
         `)
-            .then(res => {
-                let name = res.data.location.name
-                let temp = res.data.current.temp_f
-                let condition = res.data.current.condition.text
-                let icon = res.data.current.condition.icon
-                let high = res.data.forecast.forecastday[0].day.maxtemp_f
-                let low = res.data.forecast.forecastday[0].day.mintemp_f
-                setLocation(name);
-                setTemp(temp);
-                setCondition(condition);
-                setIcon(icon);
-                setHigh(high);
-                setLow(low);
-                console.log(res.data)
-            })
-            .catch(function (error) {
-                console.log(error)
-            })
-
+        let name = data.location.name;
+        let temp = data.current.temp_f;
+        let condition = data.current.condition.text;
+        let forecastData = data.forecast.forecastday;
+        let region = data.location.region;
+        let icon = data.current.condition.icon;
+        setWeatherData(forecastData)
+        setRegion(region);
+        setLocation(name);
+        setTemp(temp);
+        setCondition(condition);
+        setIcon(icon);
+        console.log(data)
     }
+
 
     useEffect(() => {
         getCurrentWeather()
+        renderImg()
     }, [])
 
+    const renderImg = () => {
+
+        let imgUrl = ""
+        if (condition == "Sunny") {
+            imgUrl = "https://www.dropbox.com/s/sgcg2di6uoxfnjn/sunnysky.png?raw=1"
+        } else {
+            imgUrl = ""
+        }
+        document.getElementById("myImg").src = imgUrl;
+    }
+
     return (
-        <div className='card-container'>
+        <div className='card-container' id='selected'>
+            <h1 className='heading-text'>Look up weather and shit</h1>
             <div className='search-container'>
                 <div className="searchbar">
                     <div className="searchbar-wrapper">
@@ -76,7 +88,7 @@ const Weather = () => {
 
                         <div className="searchbar-center">
                             <div className="searchbar-input-spacer"></div>
-                            <form>
+
                             <input
                                 type="text"
                                 className="searchbar-input"
@@ -89,13 +101,13 @@ const Weather = () => {
                                 title="Search"
                                 role="combobox"
                                 placeholder="Search City" />
-                                </form>
+
                         </div>
 
 
                     </div>
                 </div>
-              
+
                 <div onClick={onSubmit} className='svg-container'>
                     <svg className="button" width="34" height="34" viewBox="0 0 74 74" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <circle cx="37" cy="37" r="35.5" stroke="black" strokeWidth="3"></circle>
@@ -105,19 +117,57 @@ const Weather = () => {
             </div>
 
 
-            <div className='card'>
+            {/* <div className='card'>
                 <div className='card-contents'>
-                    <h1>{location}</h1>
-                    <span className='temp'>{temp} °F</span>
-                    <span className='condition'>{condition}</span>
-                    <span className='high'>H: {high}</span>
-                    <span className='low'>L: {low}</span>
+                    <div className='card-contents-heading'>
+                        <h1>{location}</h1>
+                        <h2>{region}</h2>
+                    </div>
+                    <div className='temp-condition'>
+                        <span className='temp'>{temp} °F</span>
+                        <span className='condition'>{condition}</span>
+                    </div>
+                    <div className='high-low'>
+                        <span className='high'>H: {high} °F</span>
+                        <span className='low'>L: {low} °F</span>
+                    </div>
                     <img src={icon} alt="" />
+                </div>
+            </div> */}
+
+
+
+
+
+
+
+            <div className='card-b'>
+
+                <div className='card-contents-heading-b'>
+                    <h1>{location}</h1>
+                    <h2>{region}</h2>
+                    <span className='temp-b'>{temp} °F</span>
+                    <span className='condition-b'>{condition}</span>
+                </div>
+                <div className='tenDay'><span>10 Day Forcast</span> </div>
+                <div className="forcast-container">
+
+                    {weatherData.map((day, idx) => {
+                        return (
+                            <div key={idx} className='day'>
+                                <div><span>{day.date}</span></div>
+                                <div> <img src={day.day.condition.icon} alt="" /> </div>
+                                <div><span className='high-b'>H: {day.day.maxtemp_f} °F</span> </div>
+                                <div> <span className='low-b'>L: {day.day.mintemp_f} °F</span></div>
+
+                            </div>
+                        )
+                    })}
                 </div>
 
             </div>
-
-        </div>
+            < img id="myImg" ></img >
+        </div >
 
     )
 }
