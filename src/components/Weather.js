@@ -58,6 +58,13 @@ const Weather = () => {
         getCurrentWeather();
     }
 
+    const handleKeyPress = (event) => {
+        if(event.key === 'Enter'){
+         getCurrentWeather()
+        }
+      }
+
+
 
     const getCurrentWeather = async () => {
         const { data } = await axios.get(`http://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q=${values.input}&days=10&aqi=no&alerts=no
@@ -149,8 +156,9 @@ const Weather = () => {
                                 autoComplete="off"
                                 title="Search"
                                 role="combobox"
-                                placeholder="Search City" />
-
+                                placeholder="Search City" 
+                                onKeyPress={handleKeyPress}
+                                />
                         </div>
 
 
