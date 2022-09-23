@@ -2,7 +2,21 @@ import React, { useState, useEffect } from 'react'
 import axios from 'axios';
 import moment from 'moment';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faWind, faDroplet, faTemperatureHalf } from '@fortawesome/free-solid-svg-icons';
+import {
+    faWind,
+    faDroplet,
+    faTemperatureHalf,
+    faSun,
+    faEye,
+    faWater
+}
+    from '@fortawesome/free-solid-svg-icons';
+import sunny from '../assets/sunny.mp4';
+import overcast from '../assets/overcast.mp4';
+import rainslow from '../assets/rainslow.mp4';
+import cloudy from '../assets/cloudy.mp4';
+import heavyrain from '../assets/rain.mp4';
+
 
 const initValue = {
     input: 'Los Angeles'
@@ -28,7 +42,9 @@ const Weather = () => {
     const [wind, setWind] = useState();
     const [rain, setRain] = useState();
     const [feelsLike, setFeelsLike] = useState();
-
+    const [uv, setUv] = useState();
+    const [vis, setVis] = useState();
+    const [humid, setHumid] = useState();
 
     let API_KEY = process.env.REACT_APP_API_KEY;
 
@@ -60,6 +76,9 @@ const Weather = () => {
         let wind = data.current.wind_mph;
         let rain = data.forecast.forecastday[0].day.totalprecip_in;
         let feels = data.current.feelslike_f;
+        let uv = data.current.uv;
+        let vis = data.current.vis_miles;
+        let humid = data.current.humidity;
         setWeatherData(forecastData)
         setRegion(region);
         setLocation(name);
@@ -74,13 +93,11 @@ const Weather = () => {
         setWind(wind);
         setRain(rain);
         setFeelsLike(feels);
+        setUv(uv);
+        setVis(vis);
+        setHumid(humid);
         console.log(data)
     }
-
-
-
-
-    //   console.log(moment().format('dddd'), moment().add(2, 'days').calendar());
 
 
     const switchVisible = () => {
@@ -96,30 +113,10 @@ const Weather = () => {
     }
 
 
-
-
-
-
     useEffect(() => {
         getCurrentWeather()
-        renderImg()
 
-    }, [condition])
-
-    const renderImg = () => {
-        let c = condition
-        let imgUrl = ""
-        if (c == "Sunny" || c == "Clear") {
-            imgUrl = "https://www.dropbox.com/s/ed71x4yz16772ul/blue-sky-SBI-300617901.jpg?raw=1"
-        } else if (c == "Overcast") {
-            imgUrl = "https://www.dropbox.com/s/gvphoajhwbvqmj9/overcast.jpeg?raw=1"
-        } else if (c == "Partly cloudy") {
-            imgUrl = "https://www.dropbox.com/s/d0snz49s6cxgdv7/Screen%20Shot%202022-09-22%20at%202.51.56%20PM.png?raw=1"
-        } else {
-            imgUrl = ""
-        }
-        document.getElementById("myImg").src = imgUrl;
-    }
+    }, [])
 
     return (
         <div className='card-container'>
@@ -226,18 +223,40 @@ const Weather = () => {
                 <div className='info-cards'>
                     <FontAwesomeIcon icon={faDroplet} />
                     <div><span>Rain</span></div>
-                    <div><span>{rain}" in last 24h</span></div>
+                    <div><span>{rain}"</span></div>
                 </div>
                 <div className='info-cards'>
-                <FontAwesomeIcon icon={faTemperatureHalf} />
+                    <FontAwesomeIcon icon={faTemperatureHalf} />
                     <div><span>Feels Like</span></div>
                     <div><span>{feelsLike} °F</span></div>
                 </div>
-               
+                <div className='info-cards'>
+                    <FontAwesomeIcon icon={faSun} />
+                    <div><span>UV Index</span></div>
+                    <div><span>{uv}</span></div>
+                    {uv > 5 ? <div><span>High</span></div>
+                        : <div><span>Moderate</span></div>}
+                </div>
+                <div className='info-cards'>
+                    <FontAwesomeIcon icon={faEye} />
+                    <div><span>Visibility</span></div>
+                    <div><span>{vis} mi</span></div>
+                </div>
+                <div className='info-cards'>
+                    <FontAwesomeIcon icon={faWater} />
+                    <div><span>Humidity</span></div>
+                    <div><span>{humid}%</span></div>
+                </div>
+
             </div>
 
-            <img id="myImg" ></img>
 
+            {condition == "Sunny" ? <video src={sunny} id="vids" autoPlay loop muted preload="true" /> : null}
+            {condition == "Overcast" ? <video src={overcast} id="vids" autoPlay loop muted /> : null}
+            {condition == "Moderate rain" ? <video src={rainslow} id="vids" autoPlay loop muted />
+                : condition == "Light rain shower" ? <video src={rainslow} id="vids" autoPlay loop muted /> : null}
+            {condition == "Partly cloudy" ? <video src={cloudy} id="vids" autoPlay loop muted /> : null}
+            {condition == "Torrential rain shower" ? <video src={heavyrain} id="vids" autoPlay loop muted /> : null}
         </div >
 
     )
