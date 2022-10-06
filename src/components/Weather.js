@@ -20,10 +20,7 @@ const initValue = {
     input: 'Los Angeles'
 }
 
-const state = {
 
-    addCard: ["", "", "", "", "", "", "", "", "", ""]
-}
 const Weather = () => {
     const [values, setValues] = useState(initValue);
     const [location, setLocation] = useState('');
@@ -264,7 +261,8 @@ const Weather = () => {
             {condition == "Overcast" ? <video src={overcast} id="vids" autoPlay loop muted /> : null}
             {condition == "Moderate rain" ? <video src={rainslow} id="vids" autoPlay loop muted />
                 : condition == "Light rain shower" ? <video src={rainslow} id="vids" autoPlay loop muted /> : 
-                condition == "Light rain" ? <video src={rainslow} id="vids" autoPlay loop muted />  : null}
+                condition == "Light rain" ? <video src={rainslow} id="vids" autoPlay loop muted />  : 
+                condition == "Mist" ? <video src={rainslow} id="vids" autoPlay loop muted />  : null}
             {condition == "Partly cloudy" ? <video src={cloudy} id="vids" autoPlay loop muted /> : null}
             {condition == "Torrential rain shower" ? <video src={heavyrain} id="vids" autoPlay loop muted /> : null}
         </div >
