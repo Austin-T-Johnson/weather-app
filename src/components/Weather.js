@@ -65,7 +65,7 @@ const Weather = () => {
 
 
     const getCurrentWeather = async () => {
-        const { data } = await axios.get(`http://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q=${values.input}&days=10&aqi=no&alerts=no
+        const { data } = await axios.get(`http://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q=${values.input}&days=10&aqi=no&alerts=no/
         `)
         let name = data.location.name;
         let temp = data.current.temp_f;
