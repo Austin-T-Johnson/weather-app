@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios';
-import moment from 'moment';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     faWind,
@@ -16,8 +15,7 @@ import overcast from '../assets/overcast.mp4';
 import rainslow from '../assets/rainslow.mp4';
 import cloudy from '../assets/cloudy.mp4';
 import heavyrain from '../assets/rain.mp4';
-
-
+import {useJsApiLoader} from '@react-google-maps/api';
 const initValue = {
     input: 'Los Angeles'
 }
@@ -46,7 +44,10 @@ const Weather = () => {
     const [vis, setVis] = useState();
     const [humid, setHumid] = useState();
 
-    let API_KEY = process.env.REACT_APP_API_KEY;
+    const API_KEY = process.env.REACT_APP_API_KEY;
+    const {} = useJsApiLoader({
+        googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
+    })
 
 
 
@@ -262,7 +263,8 @@ const Weather = () => {
             {condition == "Sunny" ? <video src={sunny} id="vids" autoPlay loop muted preload="true" /> : null}
             {condition == "Overcast" ? <video src={overcast} id="vids" autoPlay loop muted /> : null}
             {condition == "Moderate rain" ? <video src={rainslow} id="vids" autoPlay loop muted />
-                : condition == "Light rain shower" ? <video src={rainslow} id="vids" autoPlay loop muted /> : null}
+                : condition == "Light rain shower" ? <video src={rainslow} id="vids" autoPlay loop muted /> : 
+                condition == "Light rain" ? <video src={rainslow} id="vids" autoPlay loop muted />  : null}
             {condition == "Partly cloudy" ? <video src={cloudy} id="vids" autoPlay loop muted /> : null}
             {condition == "Torrential rain shower" ? <video src={heavyrain} id="vids" autoPlay loop muted /> : null}
         </div >
