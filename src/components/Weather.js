@@ -257,7 +257,7 @@ const Weather = () => {
             </div>
 
 
-            {condition == "Sunny" ? <video src={sunny} id="vids" autoPlay loop muted preload="true" /> : null}
+            {condition == "Sunny" ? <video src={sunny} id="vids" autoPlay loop muted preload="true" /> : condition == "Clear" ? <video src={sunny} id="vids" autoPlay loop muted preload="true" /> : null}
             {condition == "Overcast" ? <video src={overcast} id="vids" autoPlay loop muted /> : null}
             {condition == "Moderate rain" ? <video src={rainslow} id="vids" autoPlay loop muted />
                 : condition == "Light rain shower" ? <video src={rainslow} id="vids" autoPlay loop muted /> : 
