@@ -15,6 +15,7 @@ import overcast from '../assets/overcast.mp4';
 import rainslow from '../assets/rainslow.mp4';
 import cloudy from '../assets/cloudy.mp4';
 import heavyrain from '../assets/rain.mp4';
+import snow from '../assets/snow.mp4'
 import {useJsApiLoader} from '@react-google-maps/api';
 const initValue = {
     input: 'Los Angeles'
@@ -264,6 +265,7 @@ const Weather = () => {
                 condition == "Mist" ? <video src={rainslow} id="vids" autoPlay loop muted />  : null}
             {condition == "Partly cloudy" ? <video src={cloudy} id="vids" autoPlay loop muted /> : null}
             {condition == "Torrential rain shower" ? <video src={heavyrain} id="vids" autoPlay loop muted /> : null}
+            {condition.includes('snow') ? <video src={snow} id="vids" autoPlay loop muted /> : null}
         </div >
 
     )
