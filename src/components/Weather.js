@@ -120,7 +120,6 @@ const Weather = () => {
 
     useEffect(() => {
         getCurrentWeather()
-
     }, [])
 
     return (
